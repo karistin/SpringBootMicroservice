@@ -1,8 +1,7 @@
-package com.programmingtechie.invertoryservice.repository;
+package com.programmingtechie.inventoryservice.repository;
 
-import com.programmingtechie.invertoryservice.model.Inventory;
+import com.programmingtechie.inventoryservice.model.Inventory;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {

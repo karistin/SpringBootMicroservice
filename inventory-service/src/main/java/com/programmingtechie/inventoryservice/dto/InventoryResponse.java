@@ -1,4 +1,4 @@
-package com.programmingtechie.invertoryservice.dto;
+package com.programmingtechie.inventoryservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.programmingtechie.invertoryservice.model;
+package com.programmingtechie.inventoryservice.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
