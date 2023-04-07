@@ -1,5 +1,6 @@
 rootProject.name = 'microservices-new'
 include 'product-service'
-include 'invertory-service'
+include 'inventory-service'
 include 'order-service'
+include 'discovery-server'
 

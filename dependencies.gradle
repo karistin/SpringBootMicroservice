@@ -2,7 +2,8 @@
 ext.lib = [
         'lombok' : 'org.projectlombok:lombok',
         'springStarter' : 'org.springframework.boot:spring-boot-starter-web',
-        'testContainersBom' : 'org.testcontainers:testcontainers-bom:1.17.6'
+        'testContainersBom' : 'org.testcontainers:testcontainers-bom:1.17.6',
+        'springCloudBom' :'org.springframework.cloud:spring-cloud-dependencies:2022.0.2'
 ]
 
 ext.libsTest = [

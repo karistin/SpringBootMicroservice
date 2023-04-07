@@ -33,19 +33,22 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
     }
 
+
     dependencies {
-        implementation lib.springStarter
         implementation platform(lib.testContainersBom) //import bom
+        implementation platform(lib.springCloudBom) //import bom
+        implementation lib.springStarter
 
         compileOnly lib.lombok
         annotationProcessor lib.lombok
 
-
         testImplementation libsTest.jupiterContainersTest
         testImplementation libsTest.springStarterTest
     }
+
 
     test {
         useJUnitPlatform()
