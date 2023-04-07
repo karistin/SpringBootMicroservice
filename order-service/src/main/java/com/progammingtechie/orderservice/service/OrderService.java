@@ -10,6 +10,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final WebClient webClient;
     public void placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -26,8 +28,23 @@ public class OrderService {
             .toList();
 
         order.setOrderLineItemsList(orderLineItems);
+//        Call Inventory Service, and place order if product is in
+//        stock
+        Boolean result = webClient.get()
+            .uri("http://localhost:8082/api/inventory")
+            .retrieve()
+//            return
+            .bodyToMono(Boolean.class)
+//            return type
+            .block();
+//            make sync
 
-        orderRepository.save(order);
+        if (result) {
+            orderRepository.save(order);
+        } else {
+            throw new IllegalArgumentException(
+                "Product is not in stock, please try it again later");
+        }
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
