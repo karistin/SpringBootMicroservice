@@ -1,1 +1,5 @@
-rootProject.name = 'product-service'
+rootProject.name = 'microservices-new'
+include 'product-service'
+include 'invertory-service'
+include 'order-service'
+

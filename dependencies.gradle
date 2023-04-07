@@ -1,0 +1,11 @@
+
+ext.lib = [
+        'lombok' : 'org.projectlombok:lombok',
+        'springStarter' : 'org.springframework.boot:spring-boot-starter-web',
+        'testContainersBom' : 'org.testcontainers:testcontainers-bom:1.17.6'
+]
+
+ext.libsTest = [
+        'jupiterContainersTest' : 'org.testcontainers:junit-jupiter',
+        'springStarterTest' : 'org.springframework.boot:spring-boot-starter-test'
+]
