@@ -1,13 +1,16 @@
 package com.progammingtechie.orderservice.service;
 
+import com.progammingtechie.orderservice.dto.InventoryResponse;
 import com.progammingtechie.orderservice.dto.OrderLineItemsDto;
 import com.progammingtechie.orderservice.dto.OrderRequest;
 import com.progammingtechie.orderservice.model.Order;
 import com.progammingtechie.orderservice.model.OrderLineItems;
 import com.progammingtechie.orderservice.repository.OrderRepository;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -28,18 +32,24 @@ public class OrderService {
             .toList();
 
         order.setOrderLineItemsList(orderLineItems);
-//        Call Inventory Service, and place order if product is in
-//        stock
-        Boolean result = webClient.get()
-            .uri("http://localhost:8082/api/inventory")
-            .retrieve()
-//            return
-            .bodyToMono(Boolean.class)
-//            return type
-            .block();
-//            make sync
+        List<String> skuCodes = order.getOrderLineItemsList().stream()
+            .map(OrderLineItems::getSkuCode)
+            .toList();
 
-        if (result) {
+
+        //        Call Inventory Service, and place order if product is in
+        //        stock
+        InventoryResponse[] inventoryResponsesArr = webClient.get()
+            .uri("http://localhost:8082/api/inventory",
+                uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
+            .retrieve()
+            .bodyToMono(InventoryResponse[].class)
+            .block();
+
+        boolean allProductsInStock = Arrays.stream(inventoryResponsesArr)
+            .allMatch(InventoryResponse::isInStock);
+
+        if (allProductsInStock) {
             orderRepository.save(order);
         } else {
             throw new IllegalArgumentException(
@@ -50,6 +60,7 @@ public class OrderService {
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
         OrderLineItems orderLineItems = new OrderLineItems();
         orderLineItems.setId(orderLineItemsDto.getId());
+        orderLineItems.setSkuCode(orderLineItemsDto.getSkuCode());
         orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
         orderLineItems.setPrice(orderLineItemsDto.getPrice());
         return orderLineItems;
