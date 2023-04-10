@@ -3,4 +3,5 @@ include 'product-service'
 include 'inventory-service'
 include 'order-service'
 include 'discovery-server'
+include 'api-gateway'
 
